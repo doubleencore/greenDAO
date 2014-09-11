@@ -263,7 +263,7 @@ property>${property.javaType} ${property.propertyName}<#if property_has_next>, <
 
     @Override
     public boolean equals(Object o) {
-    	if (o instanceof ${entity.className}) {
+        if (o instanceof ${entity.className}) {
 <#list entity.properties as property>
 <#-- I don't know of a smarter way to check if javaType is a primitive -->
             <#if property.javaType?matches("byte") ||
@@ -276,15 +276,15 @@ property>${property.javaType} ${property.propertyName}<#if property_has_next>, <
                 property.javaType?matches("boolean")>
             if (${property.propertyName} != ((${entity.className}) o).get${property.propertyName?cap_first}()) return false;
             <#else>
-	    	if (${property.propertyName} != null && !${property.propertyName}.equals(((${entity.className}) o).get${property.propertyName?cap_first}()) ||
-	    	        ${property.propertyName} == null && ((${entity.className}) o).get${property.propertyName?cap_first}() != null)
-	    	        return false;
-	    	</#if>
+            if (${property.propertyName} != null && !${property.propertyName}.equals(((${entity.className}) o).get${property.propertyName?cap_first}()) ||
+                ${property.propertyName} == null && ((${entity.className}) o).get${property.propertyName?cap_first}() != null)
+                    return false;
+            </#if>
 </#list>
-		    return true;
-	    } else {
-    		return super.equals(o);
-	    }
+            return true;
+        } else {
+            return super.equals(o);
+        }
     }
 
 <#if entity.hasKeepSections>
