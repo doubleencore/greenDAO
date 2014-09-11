@@ -260,6 +260,33 @@ property>${property.javaType} ${property.propertyName}<#if property_has_next>, <
     }
 
 </#if>
+
+    @Override
+    public boolean equals(Object o) {
+    	if (o instanceof ${entity.className}) {
+<#list entity.properties as property>
+<#-- I don't know of a smarter way to check if javaType is a primitive -->
+            <#if property.javaType?matches("byte") ||
+                property.javaType?matches("short") ||
+                property.javaType?matches("int") ||
+                property.javaType?matches("long") ||
+                property.javaType?matches("float") ||
+                property.javaType?matches("double") ||
+                property.javaType?matches("char") ||
+                property.javaType?matches("boolean")>
+            if (${property.propertyName} != ((${entity.className}) o).get${property.propertyName?cap_first}()) return false;
+            <#else>
+	    	if (${property.propertyName} != null && !${property.propertyName}.equals(((${entity.className}) o).get${property.propertyName?cap_first}()) ||
+	    	        ${property.propertyName} == null && ((${entity.className}) o).get${property.propertyName?cap_first}() != null)
+	    	        return false;
+	    	</#if>
+</#list>
+		    return true;
+	    } else {
+    		return super.equals(o);
+	    }
+    }
+
 <#if entity.hasKeepSections>
     // KEEP METHODS - put your custom methods here
 ${keepMethods!}    // KEEP METHODS END
