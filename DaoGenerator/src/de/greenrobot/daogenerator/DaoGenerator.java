@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011-2015 Markus Junginger, greenrobot (http://greenrobot.de)
+ * Copyright (C) 2011-2016 Markus Junginger, greenrobot (http://greenrobot.org)
  *
  * This file is part of greenDAO Generator.
  * 
@@ -28,7 +28,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import freemarker.template.Configuration;
-import freemarker.template.DefaultObjectWrapper;
 import freemarker.template.Template;
 
 /**
@@ -50,17 +49,21 @@ public class DaoGenerator {
     private Template templateContentProvider;
 
     public DaoGenerator() throws IOException {
-        System.out.println("greenDAO Generator");
-        System.out.println("Copyright 2011-2015 Markus Junginger, greenrobot.de. Licensed under GPL V3.");
+        this(false);
+    }
+
+    public DaoGenerator(boolean encryption) throws IOException {
+        System.out.println("greenDAO Generator" + (encryption ? " (enryption mode)" : ""));
+        System.out.println("Copyright 2011-2016 Markus Junginger, greenrobot.de. Licensed under GPL V3.");
         System.out.println("This program comes with ABSOLUTELY NO WARRANTY");
 
         patternKeepIncludes = compilePattern("INCLUDES");
         patternKeepFields = compilePattern("FIELDS");
         patternKeepMethods = compilePattern("METHODS");
 
-        Configuration config = new Configuration();
-        config.setClassForTemplateLoading(this.getClass(), "/");
-        config.setObjectWrapper(new DefaultObjectWrapper());
+        Configuration config = new Configuration(Configuration.VERSION_2_3_23);
+        String basePackagePath = encryption ? "/encryption/" : "/standard/";
+        config.setClassForTemplateLoading(this.getClass(), basePackagePath);
 
         templateDao = config.getTemplate("dao.ftl");
         templateDaoMaster = config.getTemplate("dao-master.ftl");
@@ -86,7 +89,7 @@ public class DaoGenerator {
         long start = System.currentTimeMillis();
 
         File outDirFile = toFileForceExists(outDir);
-        File outDirEntityFile = outDirEntity != null? toFileForceExists(outDirEntity): outDirFile;
+        File outDirEntityFile = outDirEntity != null ? toFileForceExists(outDirEntity) : outDirFile;
         File outDirTestFile = outDirTest != null ? toFileForceExists(outDirTest) : null;
 
         schema.init2ndPass();
