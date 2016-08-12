@@ -68,7 +68,7 @@ as ifc>${ifc}<#if ifc_has_next>, </#if></#list></#if> {
 ${property.javaDocField}
 </#if>
 <#if property.codeBeforeField ??>
-     ${property.codeBeforeField}
+    ${property.codeBeforeField}
 </#if>
     private ${property.javaTypeInEntity} ${property.propertyName};
 </#list>
